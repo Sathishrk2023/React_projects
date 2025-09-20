@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="output.css">
+  <script defer src="script.js"></script>
+</head>
+<body class="flex items-center justify-center flex-col ">
+  <div class="box w-[400px] top-[200px] h-[350px] m-[30px] p-7 text-center bg-gray-200 rounded-3xl mt-[100px] shadow-xl shadow-blue-400">
+    <h1 class="text-5xl text-blue-400 text-shadow-2xs font-bold text-shadow-gray-700">Stop watch</h1>
+    <div id="display" class="text-3xl mt-[50px] font-medium">
+      00:00:00
+    </div>
+    <div class="controls mt-[50px]">
+      <button onclick="start()" class="bg-green-400 p-2 size-[50px] rounded-full text-white cursor-pointer active:font-bold">start</button>
+      <button onclick="lap()" class="bg-orange-400 p-2 size-[50px] rounded-full text-white cursor-pointer active:font-bold">lap</button>
+      <button onclick="stop()" class="bg-red-400 p-2 size-[50px] rounded-full text-white cursor-pointer active:font-bold">stop</button>
+      <button onclick="reset()" class="bg-blue-600 p-2  text-white w-[100px] rounded-2xl cursor-pointer active:font-bold">Reset</button>
+    </div>
+  </div>
+  <div class="w-[200px] h-auto text-center">
+    <ul id="laps" class="text-2xl text-blue-700"></ul>
+  </div>
+
+  <script>
+    let [hours, minutes, seconds] = [0, 0, 0];
+    let timer = null;
+
+    function displayTime() {
+      let h = hours < 10 ? "0" + hours : hours;
+      let m = minutes < 10 ? "0" + minutes : minutes;
+      let s = seconds < 10 ? "0" + seconds : seconds;
+      document.getElementById("display").innerText = `${h}:${m}:${s}`;
+      return `${h}:${m}:${s}`;
+    }
+
+    function stopwatch() {
+      seconds++;
+      if (seconds === 60) {
+        seconds = 0;
+        minutes++;
+        if (minutes === 60) {
+          minutes = 0;
+          hours++;
+        }
+      }
+      displayTime();
+    }
+
+    function start() {
+      if (timer !== null) return; // prevent multiple intervals
+      timer = setInterval(stopwatch, 1000);
+    }
+
+    function stop() {
+      clearInterval(timer);
+      timer = null;
+    }
+
+    function reset() {
+      clearInterval(timer);
+      timer = null;
+      [hours, minutes, seconds] = [0, 0, 0];
+      document.getElementById("laps").innerHTML = "";
+      displayTime();
+    }
+
+    function lap() {
+      if (timer !== null) {
+        const lapTime = displayTime();
+        let li = document.createElement("li");
+        li.innerText = `Lap: ${lapTime}`;
+        document.getElementById("laps").appendChild(li);
+      }
+    }
+  </script>
+  
+</body>
+</html>
